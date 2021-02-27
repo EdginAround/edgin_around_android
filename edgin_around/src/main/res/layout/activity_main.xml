@@ -6,11 +6,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:weightSum="2"
     >
     <TextView
         android:text="@string/hello"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-    />
+        android:layout_weight="1"
+        />
+    <com.edgin.around.GameView
+        android:id="@+id/game_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        />
 </LinearLayout>
 
