@@ -6,5 +6,6 @@
     <string name="main_no_permissions_title">Permissions</string>
     <string name="main_no_permissions_text">Not all permissions were granted. Some functionalitites may not work.</string>
     <string name="main_no_permissions_ok">OK</string>
+    <string name="lorem_ipsum">Lorem Ipsum</string>
 </resources>
 
