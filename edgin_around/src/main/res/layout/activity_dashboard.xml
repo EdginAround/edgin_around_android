@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     >
     <com.edgin.around.app.GameView
-        android:id="@+id/game_view"
+        android:id="@+id/sprite_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -26,13 +26,8 @@
             android:background="@android:color/transparent"
             />
         <Button
-            android:text="@string/lorem_ipsum"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            />
-        <Button
-            android:text="@string/lorem_ipsum"
+            android:id="@+id/button_play"
+            android:text="@string/main_play"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"

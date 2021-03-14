@@ -9,14 +9,14 @@
     android:weightSum="2"
     >
     <TextView
-        android:text="@string/hello"
+        android:text="@string/intro_hello"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         />
     <Button
         android:id="@+id/button_start"
-        android:text="@string/start"
+        android:text="@string/intro_start"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"

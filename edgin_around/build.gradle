@@ -6,7 +6,7 @@ android {
     compileSdkVersion 28
     buildToolsVersion '29.0.0'
     defaultConfig {
-        applicationId 'com.edgin.around'
+        applicationId 'com.edgin.around.app'
         minSdkVersion 23
         targetSdkVersion 28
         versionCode 7
@@ -18,9 +18,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+        }
+    }
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation "androidx.appcompat:appcompat:1.1.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "com.google.code.gson:gson:2.8.5"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.4.2"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.5.1"
 }

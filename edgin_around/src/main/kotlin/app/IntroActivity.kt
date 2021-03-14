@@ -1,9 +1,9 @@
-package com.edgin.around
+package com.edgin.around.app
 
 import android.Manifest
 import android.app.AlertDialog
 import android.content.Intent
-import android.content.DialogInterface 
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -13,10 +13,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
-const val TAG: String = "EdginAround"
-val LIB_VERSION: IntArray = intArrayOf(0, 1, 0)
+import com.edgin.around.rendering.About
 
-class MainActivity : AppCompatActivity() {
+const val TAG: String = "EdginAround"
+
+class IntroActivity : AppCompatActivity() {
     private val REQUEST_CODE = 1
 
     private lateinit var buttonStart: Button
@@ -26,11 +27,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.i(TAG, "Welcome!")
+
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_intro)
 
         buttonStart = findViewById(R.id.button_start) as Button
-        buttonStart.setOnClickListener { gotoGame() }
+        buttonStart.setOnClickListener { gotoDashboard() }
 
         checkEdginAroundVersion()
         checkPermissions()
@@ -46,10 +49,10 @@ class MainActivity : AppCompatActivity() {
                 val haveAllPermissions = grantResults.all { it == PackageManager.PERMISSION_GRANTED }
                 if (!haveAllPermissions) {
                     with(AlertDialog.Builder(this, R.style.AlertDialog)) {
-                        setTitle(R.string.main_no_permissions_title)
-                        setMessage(R.string.main_no_permissions_text)
+                        setTitle(R.string.intro_no_permissions_title)
+                        setMessage(R.string.intro_no_permissions_text)
                         setPositiveButton(
-                            R.string.main_no_permissions_ok,
+                            R.string.intro_no_permissions_ok,
                             DialogInterface.OnClickListener { _, _ -> finish() }
                         )
                         create()
@@ -75,17 +78,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkEdginAroundVersion() {
-        val version = About().getVersion();
-        val major = version[0].toInt();
-        val minor = version[1].toInt();
-        val patch = version[2].toInt();
-        if (major != LIB_VERSION[0] || minor != LIB_VERSION[1] || patch < LIB_VERSION[2]) {
+        val about = About()
+        if (!about.checkVersion()) {
+            val version = about.getVersion()
+            Log.e(TAG, "Lib version: ${version[0]}.${version[1]}.${version[2]}")
             Toast.makeText(this, R.string.lib_wrong_version, Toast.LENGTH_LONG).show()
         }
     }
 
-    private fun gotoGame() {
-        val intent = Intent(this, GameActivity::class.java)
+    private fun gotoDashboard() {
+        val intent = Intent(this, DashboardActivity::class.java)
         startActivity(intent)
     }
 }

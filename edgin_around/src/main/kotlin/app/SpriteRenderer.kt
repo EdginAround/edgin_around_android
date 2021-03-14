@@ -1,19 +1,18 @@
-package com.edgin.around
+package com.edgin.around.app
 
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import javax.microedition.khronos.opengles.GL10
 import javax.microedition.khronos.egl.EGLConfig
 
-class GameRenderer: GLSurfaceView.Renderer {
-    private val DEFAULT_WIDTH = 800
-    private val DEFAULT_HEIGHT = 800
+import com.edgin.around.rendering.PreviewExpositor
 
+class SpriteRenderer(val spriteDir: String): GLSurfaceView.Renderer {
     private var expositor: PreviewExpositor? = null
 
     override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
         expositor = PreviewExpositor(
-            "/sdcard/edgin_around/resources/sprites/",
+            spriteDir,
             "pirate",
             "pirate.saml",
             "idle",
