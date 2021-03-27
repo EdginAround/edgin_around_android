@@ -2,10 +2,20 @@ package com.edgin.around.game
 
 import android.os.SystemClock
 import android.util.Log
-
+import com.edgin.around.api.actions.Action
+import com.edgin.around.api.actions.ConfigurationAction
+import com.edgin.around.api.actions.CraftEndAction
+import com.edgin.around.api.actions.CraftStartAction
+import com.edgin.around.api.actions.CreateActorsAction
+import com.edgin.around.api.actions.DamageAction
+import com.edgin.around.api.actions.DeleteActorsAction
+import com.edgin.around.api.actions.LocalizeAction
+import com.edgin.around.api.actions.MovementAction
+import com.edgin.around.api.actions.PickEndAction
+import com.edgin.around.api.actions.PickStartAction
+import com.edgin.around.api.actions.StatUpdateAction
+import com.edgin.around.api.actions.UpdateInventoryAction
 import com.edgin.around.api.actors.ActorId
-import com.edgin.around.api.enums.Hand
-import com.edgin.around.api.actions.*
 
 open class Motive {
     private val startTime = SystemClock.uptimeMillis()
@@ -25,7 +35,7 @@ open class Motive {
         tickCount += 1
     }
 
-    open protected fun expire() {
+    protected open fun expire() {
         isExpired = true
     }
 
@@ -37,37 +47,37 @@ open class Motive {
         return tickCount
     }
 
-    open protected fun doTick(interval: Long, context: MotiveContext) {
+    protected open fun doTick(interval: Long, context: MotiveContext) {
         // Do nothing by default
     }
 }
 
-class DummyMotive(): Motive() {
+class DummyMotive() : Motive() {
     override fun tick(interval: Long, context: MotiveContext) {
         expire()
     }
 }
 
-data class ConfigurationMotive(val action: ConfigurationAction): Motive() {
+data class ConfigurationMotive(val action: ConfigurationAction) : Motive() {
     override fun tick(interval: Long, context: MotiveContext) {
         context.scene.configure(action.heroActorId, action.elevation)
         expire()
     }
 }
 
-data class CraftStartMotive(val action: CraftStartAction): Motive() {
+data class CraftStartMotive(val action: CraftStartAction) : Motive() {
     override fun tick(interval: Long, context: MotiveContext) {
         expire()
     }
 }
 
-data class CraftEndMotive(val action: CraftEndAction): Motive() {
+data class CraftEndMotive(val action: CraftEndAction) : Motive() {
     override fun tick(interval: Long, context: MotiveContext) {
         expire()
     }
 }
 
-data class CreateActorsMotive(val action: CreateActorsAction): Motive() {
+data class CreateActorsMotive(val action: CreateActorsAction) : Motive() {
     override fun tick(interval: Long, context: MotiveContext) {
         context.scene.createActors(action.actors)
         context.world.createRenderers(action.actors)
@@ -75,7 +85,7 @@ data class CreateActorsMotive(val action: CreateActorsAction): Motive() {
     }
 }
 
-data class DeleteActorsMotive(val action: DeleteActorsAction): Motive() {
+data class DeleteActorsMotive(val action: DeleteActorsAction) : Motive() {
     override fun tick(interval: Long, context: MotiveContext) {
         context.scene.deleteActors(action.actorIds)
         context.world.deleteRenderers(action.actorIds)
@@ -83,7 +93,7 @@ data class DeleteActorsMotive(val action: DeleteActorsAction): Motive() {
     }
 }
 
-data class MovementMotive(val action: MovementAction): Motive() {
+data class MovementMotive(val action: MovementAction) : Motive() {
     override fun getActorId(): ActorId? {
         return action.actorId
     }
@@ -99,7 +109,7 @@ data class MovementMotive(val action: MovementAction): Motive() {
     }
 }
 
-data class LocalizeMotive(val action: LocalizeAction): Motive() {
+data class LocalizeMotive(val action: LocalizeAction) : Motive() {
     override fun getActorId(): ActorId {
         return action.actorId
     }
@@ -111,29 +121,28 @@ data class LocalizeMotive(val action: LocalizeAction): Motive() {
     }
 }
 
-
-data class StatUpdateMotive(val action: StatUpdateAction): Motive() {
+data class StatUpdateMotive(val action: StatUpdateAction) : Motive() {
     override fun tick(interval: Long, context: MotiveContext) {
         context.gui.setStats(action.stats)
         expire()
     }
 }
 
-data class PickStartMotive(val action: PickStartAction): Motive() {
+data class PickStartMotive(val action: PickStartAction) : Motive() {
     override fun tick(interval: Long, context: MotiveContext) {
         // TODO: Play pick animation
         expire()
     }
 }
 
-data class PickEndMotive(val action: PickEndAction): Motive() {
+data class PickEndMotive(val action: PickEndAction) : Motive() {
     override fun tick(interval: Long, context: MotiveContext) {
         // TODO: Play idle animation
         expire()
     }
 }
 
-data class UpdateInventoryMotive(val action: UpdateInventoryAction): Motive() {
+data class UpdateInventoryMotive(val action: UpdateInventoryAction) : Motive() {
     override fun tick(interval: Long, context: MotiveContext) {
         context.gui.setInventory(action.inventory)
         context.scene.hideActors(action.inventory.getAllIds().toTypedArray())
@@ -142,7 +151,7 @@ data class UpdateInventoryMotive(val action: UpdateInventoryAction): Motive() {
     }
 }
 
-data class DamageMotive(val action: DamageAction): Motive() {
+data class DamageMotive(val action: DamageAction) : Motive() {
     override fun tick(interval: Long, context: MotiveContext) {
         // TODO: Play animation for dealer
         // TODO: Play animation for receiver
@@ -167,10 +176,9 @@ class MotiveFactory {
             is CraftStartAction -> CraftStartMotive(action)
             is CraftEndAction -> CraftEndMotive(action)
             else -> {
-                Log.e(TAG, "Failed to cast animation into motive: ${action}")
+                Log.e(TAG, "Failed to cast animation into motive: $action")
                 DummyMotive()
             }
         }
     }
 }
-

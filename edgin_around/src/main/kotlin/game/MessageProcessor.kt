@@ -5,7 +5,7 @@ import java.io.InputStream
 class MessageProcessor(val stream: InputStream) {
     val EOM: Char = '\n'
     var bytes = ByteArray(1024)
-    var builder = StringBuilder(1024);
+    var builder = StringBuilder(1024)
 
     fun process(): Array<String> {
         val length = stream.read(bytes)
@@ -18,4 +18,3 @@ class MessageProcessor(val stream: InputStream) {
         return string.split(EOM).dropLast(1).toTypedArray()
     }
 }
-

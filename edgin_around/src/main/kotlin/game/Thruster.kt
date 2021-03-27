@@ -1,22 +1,19 @@
 package com.edgin.around.game
 
-import java.nio.file.Path
-import java.util.concurrent.locks.ReentrantLock
-import kotlin.concurrent.withLock
 import android.os.SystemClock
-import android.util.Log
-
 import com.edgin.around.api.actors.ActorId
 import com.edgin.around.rendering.Scene
 import com.edgin.around.rendering.WorldExpositor
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
-data class MotiveContext (
+data class MotiveContext(
     var scene: Scene,
     var world: WorldExpositor,
     var gui: Gui
 )
 
-class Thruster (
+class Thruster(
     scene: Scene,
     world: WorldExpositor,
     gui: Gui
@@ -63,4 +60,3 @@ class Thruster (
         actorMotives.entries.removeAll { it.value.expired() }
     }
 }
-

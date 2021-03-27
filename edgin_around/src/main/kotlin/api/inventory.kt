@@ -1,11 +1,10 @@
 package com.edgin.around.api.inventory
 
-import com.google.gson.annotations.SerializedName
-
 import com.edgin.around.api.actors.ActorId
 import com.edgin.around.api.enums.Hand
+import com.google.gson.annotations.SerializedName
 
-data class EntityInfo (
+data class EntityInfo(
     @SerializedName("id")
     val id: ActorId,
 
@@ -25,7 +24,7 @@ data class EntityInfo (
     val codename: String
 )
 
-data class Inventory (
+data class Inventory(
     @SerializedName("left_hand")
     val leftHand: EntityInfo?,
 
@@ -63,4 +62,3 @@ data class Inventory (
         return result
     }
 }
-

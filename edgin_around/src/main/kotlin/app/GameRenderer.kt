@@ -1,19 +1,17 @@
 package com.edgin.around.app
 
-import android.opengl.GLES20
 import android.opengl.GLSurfaceView
-import javax.microedition.khronos.opengles.GL10
-import javax.microedition.khronos.egl.EGLConfig
-
+import com.edgin.around.game.Thruster
 import com.edgin.around.rendering.Scene
 import com.edgin.around.rendering.WorldExpositor
-import com.edgin.around.game.Thruster
+import javax.microedition.khronos.egl.EGLConfig
+import javax.microedition.khronos.opengles.GL10
 
 class GameRenderer(
     var expositor: WorldExpositor,
     val scene: Scene,
     val thruster: Thruster
-): GLSurfaceView.Renderer {
+) : GLSurfaceView.Renderer {
     private val DEFAULT_WIDTH = 800
     private val DEFAULT_HEIGHT = 800
 
@@ -30,4 +28,3 @@ class GameRenderer(
         expositor.render(scene)
     }
 }
-

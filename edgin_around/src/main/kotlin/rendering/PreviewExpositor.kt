@@ -1,12 +1,12 @@
 package com.edgin.around.rendering
 
 class PreviewExpositor(
-        spriteDir: String,
-        skinName: String,
-        samlName: String,
-        animationName: String,
-        width: Int,
-        height: Int
+    spriteDir: String,
+    skinName: String,
+    samlName: String,
+    animationName: String,
+    width: Int,
+    height: Int
 ) {
     var bridge = PreviewExpositorBridge(spriteDir, skinName, samlName, animationName, width, height)
 
@@ -20,12 +20,12 @@ class PreviewExpositor(
 }
 
 class PreviewExpositorBridge(
-        spriteDir: String,
-        skinName: String,
-        samlName: String,
-        animationName: String,
-        width: Int,
-        height: Int
+    spriteDir: String,
+    skinName: String,
+    samlName: String,
+    animationName: String,
+    width: Int,
+    height: Int
 ) {
     private var nativePtrHolder: Long = 0
 

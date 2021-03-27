@@ -1,15 +1,14 @@
 package com.edgin.around.rendering
 
-import android.util.Log
-
-import com.edgin.around.api.actors.Actor as ApiActor
 import com.edgin.around.api.actors.ActorId
-import com.edgin.around.api.geometry.*
+import com.edgin.around.api.geometry.Angle
+import com.edgin.around.api.geometry.Zoom
+import com.edgin.around.api.actors.Actor as ApiActor
 
 class WorldExpositor(
-        resourceDir: String,
-        width: Int,
-        height: Int
+    resourceDir: String,
+    width: Int,
+    height: Int
 ) {
     internal var bridge = WorldExpositorBridge(resourceDir, width, height)
 
@@ -32,9 +31,9 @@ class WorldExpositor(
 }
 
 class WorldExpositorBridge(
-        resourceDir: String,
-        width: Int,
-        height: Int
+    resourceDir: String,
+    width: Int,
+    height: Int
 ) {
     private var nativePtrHolder: Long = 0
 
@@ -57,5 +56,4 @@ class WorldExpositorBridge(
     external fun highlight(x: Int, y: Int)
     external fun createRenderers(actors: Array<ActorBridge>)
     external fun deleteRenderers(ids: Array<ActorId>)
-
 }

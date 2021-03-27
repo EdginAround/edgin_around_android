@@ -2,13 +2,12 @@ package com.edgin.around.app
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import kotlin.concurrent.thread
-
-import com.edgin.around.rendering.Scene
-import com.edgin.around.rendering.WorldExpositor
 import com.edgin.around.game.Connector
 import com.edgin.around.game.Gui
 import com.edgin.around.game.Thruster
+import com.edgin.around.rendering.Scene
+import com.edgin.around.rendering.WorldExpositor
+import kotlin.concurrent.thread
 
 const val RESOURCE_DIR: String = "/sdcard/edgin_around/resources/"
 const val SPRITE_DIR: String = "/sdcard/edgin_around/resources/sprites/"
@@ -38,19 +37,18 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
-    override protected fun onResume() {
+    protected override fun onResume() {
         super.onResume()
         gameView.onResume()
     }
 
-    override protected fun onPause() {
+    protected override fun onPause() {
         super.onPause()
         gameView.onPause()
     }
 
-    override protected fun onDestroy() {
+    protected override fun onDestroy() {
         super.onDestroy()
         connector.stop()
     }
 }
-

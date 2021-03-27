@@ -2,8 +2,8 @@ package com.edgin.around.app
 
 import android.Manifest
 import android.app.AlertDialog
-import android.content.Intent
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-
 import com.edgin.around.rendering.About
 
 const val TAG: String = "EdginAround"
@@ -39,11 +38,11 @@ class IntroActivity : AppCompatActivity() {
         checkPermissions()
     }
 
-    override fun onRequestPermissionsResult (
+    override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
-        grantResults: IntArray)
-    {
+        grantResults: IntArray
+    ) {
         when (requestCode) {
             REQUEST_CODE -> {
                 val haveAllPermissions = grantResults.all { it == PackageManager.PERMISSION_GRANTED }
@@ -63,7 +62,7 @@ class IntroActivity : AppCompatActivity() {
     }
 
     private fun checkPermissions() {
-        val neededPremissions = arrayOf (
+        val neededPremissions = arrayOf(
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.ACCESS_NETWORK_STATE,
@@ -91,4 +90,3 @@ class IntroActivity : AppCompatActivity() {
         startActivity(intent)
     }
 }
-

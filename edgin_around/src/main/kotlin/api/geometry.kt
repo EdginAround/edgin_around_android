@@ -8,7 +8,7 @@ typealias Dimention = Int
 typealias Distance = Float
 typealias Zoom = Int
 
-data class Point (
+data class Point(
     @SerializedName("theta")
     val theta: Coordinate,
 
@@ -16,7 +16,7 @@ data class Point (
     val phi: Coordinate
 )
 
-data class Terrain (
+data class Terrain(
     @SerializedName("type")
     val variant: String,
 
@@ -24,11 +24,10 @@ data class Terrain (
     val origin: Point
 )
 
-data class Elevation (
+data class Elevation(
     @SerializedName("radius")
     val radius: Distance,
 
     @SerializedName("terrain")
     val terrain: ArrayList<Terrain>
 )
-

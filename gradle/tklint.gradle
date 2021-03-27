@@ -6,7 +6,7 @@ task ktlintCheck(type: JavaExec, group: "verification") {
     description = "Check Kotlin code style."
     classpath = configurations.ktlint
     main = "com.pinterest.ktlint.Main"
-    args "**/*.kt"
+    args "**/*.kt", "--verbose"
 }
 
 task ktlintFormat(type: JavaExec, group: "formatting") {
@@ -17,4 +17,3 @@ task ktlintFormat(type: JavaExec, group: "formatting") {
 }
 
 check.dependsOn ktlintCheck
-

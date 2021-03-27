@@ -16,8 +16,7 @@ enum class DamageVariant {
     ATTACK
 }
 
-enum class Hand (val value: Int) {
+enum class Hand(val value: Int) {
     LEFT(0),
     RIGHT(1)
 }
-

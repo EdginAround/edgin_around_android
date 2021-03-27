@@ -1,13 +1,10 @@
 package com.edgin.around.game
 
+import android.util.Log
+import com.edgin.around.api.actions.Action
+import com.edgin.around.api.constants.PORT_DATA
 import java.net.Socket
 import java.util.concurrent.atomic.AtomicBoolean
-
-import android.util.Log
-
-import com.edgin.around.api.actions.Action
-import com.edgin.around.api.actions.ActionDeserializer
-import com.edgin.around.api.constants.PORT_DATA
 
 class Connector(var thruster: Thruster) : Runnable {
     private val running = AtomicBoolean(false)
@@ -18,7 +15,7 @@ class Connector(var thruster: Thruster) : Runnable {
         running.set(false)
     }
 
-    override public fun run() {
+    public override fun run() {
         Log.d(TAG, "Connector: start")
         running.set(true)
 
@@ -49,4 +46,3 @@ class Connector(var thruster: Thruster) : Runnable {
         thruster.add(motive)
     }
 }
-

@@ -1,18 +1,20 @@
 package com.edgin.around.api.actions
 
+import com.edgin.around.api.actors.Actor
+import com.edgin.around.api.actors.ActorId
+import com.edgin.around.api.enums.DamageVariant
+import com.edgin.around.api.enums.Hand
+import com.edgin.around.api.geometry.Elevation
+import com.edgin.around.api.geometry.Point
+import com.edgin.around.api.inventory.Inventory
+import com.edgin.around.api.stats.Stats
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonDeserializer
 import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
 import java.lang.reflect.Type
-
-import com.edgin.around.api.actors.*
-import com.edgin.around.api.enums.*
-import com.edgin.around.api.geometry.*
-import com.edgin.around.api.inventory.*
-import com.edgin.around.api.stats.*
 
 open class Action {
     companion object {
@@ -24,37 +26,37 @@ open class Action {
     }
 }
 
-data class ConfigurationAction (
+data class ConfigurationAction(
     @SerializedName("hero_actor_id")
     val heroActorId: ActorId,
 
     @SerializedName("elevation_function")
     val elevation: Elevation
-): Action() {
+) : Action() {
     companion object {
         val NAME = "configuration"
     }
 }
 
-data class CreateActorsAction (
+data class CreateActorsAction(
     @SerializedName("actors")
     val actors: Array<Actor>
-): Action() {
+) : Action() {
     companion object {
         val NAME = "create_actors"
     }
 }
 
-data class DeleteActorsAction (
+data class DeleteActorsAction(
     @SerializedName("actor_ids")
     val actorIds: Array<ActorId>
-): Action() {
+) : Action() {
     companion object {
         val NAME = "delete_actors"
     }
 }
 
-data class MovementAction (
+data class MovementAction(
     @SerializedName("actor_id")
     val actorId: ActorId,
 
@@ -66,7 +68,7 @@ data class MovementAction (
 
     @SerializedName("duration")
     val duration: Float
-): Action() {
+) : Action() {
     companion object {
         val NAME = "movement"
     }
@@ -76,64 +78,64 @@ data class MovementAction (
     }
 }
 
-data class LocalizeAction (
+data class LocalizeAction(
     @SerializedName("actor_id")
     val actorId: ActorId,
 
     @SerializedName("position")
     val position: Point
-): Action() {
+) : Action() {
     companion object {
         val NAME = "localize"
     }
 }
 
-data class StatUpdateAction (
+data class StatUpdateAction(
     @SerializedName("actor_id")
     val actorId: ActorId,
 
     @SerializedName("stats")
     val stats: Stats
-): Action() {
+) : Action() {
     companion object {
         val NAME = "stat_update"
     }
 }
 
-data class PickStartAction (
+data class PickStartAction(
     @SerializedName("who")
     val who: ActorId,
 
     @SerializedName("what")
     val what: ActorId
-): Action() {
+) : Action() {
     companion object {
         val NAME = "pick_start"
     }
 }
 
-data class PickEndAction (
+data class PickEndAction(
     @SerializedName("who")
     val who: ActorId
-): Action() {
+) : Action() {
     companion object {
         val NAME = "pick_end"
     }
 }
 
-data class UpdateInventoryAction (
+data class UpdateInventoryAction(
     @SerializedName("owner_id")
     val ownerId: ActorId,
 
     @SerializedName("inventory")
     val inventory: Inventory
-): Action() {
+) : Action() {
     companion object {
         val NAME = "update_inventory"
     }
 }
 
-data class DamageAction (
+data class DamageAction(
     @SerializedName("dealer_id")
     val dealerId: ActorId,
 
@@ -145,31 +147,32 @@ data class DamageAction (
 
     @SerializedName("hand")
     val hand: Hand
-): Action() {
+) : Action() {
     companion object {
         val NAME = "damage"
     }
 }
 
-data class CraftStartAction (
+data class CraftStartAction(
     @SerializedName("crafter_id")
     val crafterId: ActorId
-): Action() {
+) : Action() {
     companion object {
         val NAME = "craft_start"
     }
 }
 
-data class CraftEndAction (
+data class CraftEndAction(
     @SerializedName("crafter_id")
     val crafterId: ActorId
-): Action() {
+) : Action() {
     companion object {
         val NAME = "craft_end"
     }
 }
 
 val ACTIONS: HashMap<String, Type> = hashMapOf(
+    /* ktlint-disable no-multi-spaces dot-spacing */
     ConfigurationAction  .NAME to ConfigurationAction  ::class.java,
     CraftStartAction     .NAME to CraftStartAction     ::class.java,
     CraftEndAction       .NAME to CraftEndAction       ::class.java,
@@ -182,10 +185,11 @@ val ACTIONS: HashMap<String, Type> = hashMapOf(
     PickEndAction        .NAME to PickEndAction        ::class.java,
     UpdateInventoryAction.NAME to UpdateInventoryAction::class.java,
     DamageAction         .NAME to DamageAction         ::class.java
+    /* ktlint-enable no-multi-spaces dot-spacing */
 )
 
-class ActionDeserializer: JsonDeserializer<Action> {
-    override public fun deserialize(
+class ActionDeserializer : JsonDeserializer<Action> {
+    public override fun deserialize(
         json: JsonElement,
         typeOfT: Type,
         context: JsonDeserializationContext
@@ -196,4 +200,3 @@ class ActionDeserializer: JsonDeserializer<Action> {
         return context.deserialize(json, variantClass)
     }
 }
-

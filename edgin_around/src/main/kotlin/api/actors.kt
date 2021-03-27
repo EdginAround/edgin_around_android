@@ -1,12 +1,11 @@
 package com.edgin.around.api.actors
 
-import com.google.gson.annotations.SerializedName
-
 import com.edgin.around.api.geometry.Point
+import com.google.gson.annotations.SerializedName
 
 typealias ActorId = Long
 
-data class Actor (
+data class Actor(
     @SerializedName("id")
     val id: ActorId,
 
@@ -16,4 +15,3 @@ data class Actor (
     @SerializedName("position")
     val position: Point?
 )
-

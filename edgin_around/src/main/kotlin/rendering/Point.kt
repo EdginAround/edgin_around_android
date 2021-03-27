@@ -5,7 +5,7 @@ import com.edgin.around.api.geometry.Point as ApiPoint
 class Point(val theta: Float, val phi: Float) {
     internal val bridge = PointBridge(theta, phi)
 
-    constructor(point: ApiPoint): this(point.theta, point.phi) {}
+    constructor(point: ApiPoint) : this(point.theta, point.phi) {}
 }
 
 class PointBridge(val theta: Float, val phi: Float) {
@@ -15,8 +15,7 @@ class PointBridge(val theta: Float, val phi: Float) {
         initialize(theta, phi)
     }
 
-    constructor(point: ApiPoint): this(point.theta, point.phi) {}
+    constructor(point: ApiPoint) : this(point.theta, point.phi) {}
 
     external fun initialize(theta: Float, phi: Float)
 }
-

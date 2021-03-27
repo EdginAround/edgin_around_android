@@ -1,7 +1,7 @@
 package com.edgin.around.game
 
-import com.edgin.around.api.stats.Stats
 import com.edgin.around.api.inventory.Inventory
+import com.edgin.around.api.stats.Stats
 
 const val TAG: String = "EdginAround"
 
@@ -11,4 +11,3 @@ class Gui {
     fun setStats(stats: Stats) {}
     fun setInventory(inventory: Inventory) {}
 }
-

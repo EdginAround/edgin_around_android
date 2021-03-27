@@ -1,13 +1,11 @@
 package com.edgin.around.app
 
-import android.opengl.GLES20
 import android.opengl.GLSurfaceView
-import javax.microedition.khronos.opengles.GL10
-import javax.microedition.khronos.egl.EGLConfig
-
 import com.edgin.around.rendering.PreviewExpositor
+import javax.microedition.khronos.egl.EGLConfig
+import javax.microedition.khronos.opengles.GL10
 
-class SpriteRenderer(val spriteDir: String): GLSurfaceView.Renderer {
+class SpriteRenderer(val spriteDir: String) : GLSurfaceView.Renderer {
     private var expositor: PreviewExpositor? = null
 
     override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
@@ -29,4 +27,3 @@ class SpriteRenderer(val spriteDir: String): GLSurfaceView.Renderer {
         expositor?.let { it.render() }
     }
 }
-
