@@ -30,7 +30,7 @@ data class ConfigurationAction(
     @SerializedName("hero_actor_id")
     val heroActorId: ActorId,
 
-    @SerializedName("elevation_function")
+    @SerializedName("elevation")
     val elevation: Elevation
 ) : Action() {
     companion object {
