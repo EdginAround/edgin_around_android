@@ -7,10 +7,9 @@ import com.edgin.around.game.Gui
 import com.edgin.around.game.Thruster
 import com.edgin.around.rendering.Scene
 import com.edgin.around.rendering.WorldExpositor
+import java.io.File
 import kotlin.concurrent.thread
 
-const val RESOURCE_DIR: String = "/sdcard/edgin_around/resources/"
-const val SPRITE_DIR: String = "/sdcard/edgin_around/resources/sprites/"
 const val DEFAULT_WIDTH = 800
 const val DEFAULT_HEIGHT = 800
 
@@ -25,8 +24,9 @@ class GameActivity : AppCompatActivity() {
         gameView = findViewById(R.id.game_view) as GameView
 
         runOnUiThread {
+            val resourcePath = File(getFilesDir(), RESOURCE_DIR).getCanonicalPath()
             val scene = Scene()
-            val world = WorldExpositor(RESOURCE_DIR, DEFAULT_WIDTH, DEFAULT_HEIGHT)
+            val world = WorldExpositor(resourcePath, DEFAULT_WIDTH, DEFAULT_HEIGHT)
             val gui = Gui()
             val thruster = Thruster(scene, world, gui)
             connector = Connector(thruster)

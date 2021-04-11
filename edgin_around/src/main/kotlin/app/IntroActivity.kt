@@ -13,8 +13,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.edgin.around.rendering.About
+import java.io.File
+import kotlin.concurrent.thread
 
 const val TAG: String = "EdginAround"
+const val RESOURCE_ZIP_ASSET_NAME = "edgin_around_resources.zip"
+const val RESOURCE_LOCK_FILE_NAME = "edgin_around_resources.lock"
+const val RESOURCE_DIR = "resources"
+const val SPRITE_DIR = "sprites"
 
 class IntroActivity : AppCompatActivity() {
     private val REQUEST_CODE = 1
@@ -36,6 +42,7 @@ class IntroActivity : AppCompatActivity() {
 
         checkEdginAroundVersion()
         checkPermissions()
+        extractResourcesIfNeeded()
     }
 
     override fun onRequestPermissionsResult(
@@ -88,5 +95,44 @@ class IntroActivity : AppCompatActivity() {
     private fun gotoDashboard() {
         val intent = Intent(this, DashboardActivity::class.java)
         startActivity(intent)
+    }
+
+    // Resources are packed in APK as assets in a zip file. In future we will download additional
+    // resources from the internet (skins, etc.). Those files in turn will have to be stored in the
+    // internal or external storage. To make the access to all the files uniform, we extract the
+    // bundled files to an internal directory.
+    private fun extractResourcesIfNeeded() {
+        val resourcesDir = File(getFilesDir(), RESOURCE_DIR)
+        val lockFile = File(getFilesDir(), RESOURCE_LOCK_FILE_NAME)
+
+        // Check is lock file exists - if so, that means the previous extraction failed and
+        // the resources need to be removed and extracted again
+        if (lockFile.exists()) {
+            Log.w(TAG, "Previous resource extraction failed!")
+            FsUtil().remove(resourcesDir)
+            lockFile.delete()
+        }
+
+        // Extract resources if not already extracted
+        if (!resourcesDir.isDirectory()) {
+            thread {
+                Log.i(TAG, "Extracting resources...")
+                lockFile.createNewFile()
+                extractResources(resourcesDir)
+                lockFile.delete()
+                Log.i(TAG, "Extracting resources: DONE")
+            }
+        } else {
+            Log.i(TAG, "Resources already extracted")
+        }
+    }
+
+    private fun extractResources(resourcesDir: File) {
+        resourcesDir.mkdirs()
+
+        val assets = getResources().getAssets()
+        val resourceStream = assets.open(RESOURCE_ZIP_ASSET_NAME)
+
+        ZipUtil().unzip(resourceStream, resourcesDir)
     }
 }
