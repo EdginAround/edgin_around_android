@@ -16,8 +16,9 @@ class DashboardActivity : AppCompatActivity() {
         buttonPlay = findViewById(R.id.button_play) as Button
         buttonPlay.setOnClickListener { gotoGame() }
 
+        val spriteDir = getFilesDir().getAbsolutePath() + "/" + RESOURCE_DIR + "/" + SPRITE_DIR
         spriteView = findViewById(R.id.sprite_view) as GameView
-        spriteView.initialize(SpriteRenderer(SPRITE_DIR))
+        spriteView.initialize(SpriteRenderer(spriteDir.toString()))
     }
 
     private fun gotoGame() {
