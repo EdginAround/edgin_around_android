@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 JNI_DIR="edgin_around/src/main/jniLibs"
 EDGIN_AROUND_VERSION="0.1.1"
