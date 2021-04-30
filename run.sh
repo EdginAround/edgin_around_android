@@ -17,8 +17,9 @@ function usage() {
     echo ' - setup - automates setting the build up'
     echo ' - build - builds Android app'
     echo ' - test - runs unit tests'
+    echo ' - format - runs `ktlint` code linter and formatter'
+    echo ' - docs - runs `dokka` documentation generator'
     echo ' - logcat - shows relevant logs from a connected device'
-    echo ' - format - runs `ktlint` code liter and formatter'
 }
 
 function run_setup() {
@@ -60,6 +61,10 @@ function run_format() {
     gradle ktlintFormat
 }
 
+function run_docs() {
+    gradle dokkaHtml
+}
+
 function run_logcat() {
     adb logcat *:S AndroidRuntime:E ActivityManager:I EdginAround:*
 }
@@ -86,6 +91,9 @@ if (( $# > 0 )); then
             ;;
         'format')
             run_format
+            ;;
+        'docs')
+            run_docs
             ;;
         'logcat')
             run_logcat

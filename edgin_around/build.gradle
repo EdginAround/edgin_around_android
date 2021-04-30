@@ -1,6 +1,7 @@
 apply plugin: "com.android.application"
 apply plugin: "kotlin-android"
 apply plugin: "kotlin-android-extensions"
+apply plugin: "org.jetbrains.dokka"
 
 apply from: "$project.rootDir/gradle/ktlint.gradle"
 
@@ -33,7 +34,6 @@ android {
 dependencies {
     ktlint "com.pinterest:ktlint:$ktlint_version"
     implementation "androidx.appcompat:appcompat:1.1.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "com.google.code.gson:gson:$gson_version"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_jupiter_api_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_jupiter_engine_version"
