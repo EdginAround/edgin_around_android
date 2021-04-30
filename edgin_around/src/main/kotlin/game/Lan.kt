@@ -39,14 +39,14 @@ class Lan {
                     continue
                 }
 
-                sendDicsoveryBroadcast(socket, broadcastAddress)
+                sendDiscoveryBroadcast(socket, broadcastAddress)
             }
         }
 
         return gatherResponses(socket)
     }
 
-    private fun sendDicsoveryBroadcast(socket: DatagramSocket, broadcastAddress: InetAddress) {
+    private fun sendDiscoveryBroadcast(socket: DatagramSocket, broadcastAddress: InetAddress) {
         Log.i(TAG, "Broadcasting on: $broadcastAddress")
         socket.setBroadcast(true)
 
