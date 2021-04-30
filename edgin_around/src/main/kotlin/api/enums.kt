@@ -20,3 +20,8 @@ enum class Hand(val value: Int) {
     LEFT(0),
     RIGHT(1)
 }
+
+enum class UpdateVariant(val value: Int) {
+    SWAP(0),
+    MERGE(1)
+}

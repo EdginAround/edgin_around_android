@@ -191,7 +191,7 @@ val ACTIONS: HashMap<String, Type> = hashMapOf(
 class ActionDeserializer : JsonDeserializer<Action> {
     public override fun deserialize(
         json: JsonElement,
-        typeOfT: Type,
+        type: Type,
         context: JsonDeserializationContext
     ): Action? {
         val jsonObject = json.getAsJsonObject()
