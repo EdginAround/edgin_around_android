@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.StrictMode
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
@@ -36,6 +37,9 @@ class IntroActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intro)
+
+        val policy = StrictMode.ThreadPolicy.Builder().permitNetwork().build()
+        StrictMode.setThreadPolicy(policy)
 
         buttonStart = findViewById(R.id.button_start) as Button
         buttonStart.setOnClickListener { gotoDashboard() }

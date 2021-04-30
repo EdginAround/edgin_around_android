@@ -1,6 +1,6 @@
 package com.edgin.around.rendering
 
-val LIB_VERSION: IntArray = intArrayOf(0, 1, 1)
+val LIB_VERSION: IntArray = intArrayOf(0, 1, 2)
 
 class About {
     internal val bridge = AboutBridge()
