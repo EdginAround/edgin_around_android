@@ -53,7 +53,7 @@ function run_build() {
     gradle build
 }
 
-function run_test() {
+function run_tests() {
     gradle test
 }
 
@@ -86,8 +86,8 @@ if (( $# > 0 )); then
             run_check_setup
             run_build
             ;;
-        'test')
-            run_test
+        'tests')
+            run_tests
             ;;
         'format')
             run_format
