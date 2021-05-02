@@ -28,6 +28,18 @@ class WorldExpositor(
     fun deleteRenderers(actorIds: Array<ActorId>) {
         bridge.deleteRenderers(actorIds)
     }
+
+    fun playAnimation(actorId: ActorId, animationName: String) {
+        bridge.playAnimation(actorId, animationName)
+    }
+
+    fun attachActor(hookName: String, baseActorId: ActorId, attachedActorId: ActorId) {
+        bridge.attachActor(hookName, baseActorId, attachedActorId)
+    }
+
+    fun detachActor(hookName: String, baseActorId: ActorId) {
+        bridge.detachActor(hookName, baseActorId)
+    }
 }
 
 class WorldExpositorBridge(
@@ -50,10 +62,14 @@ class WorldExpositorBridge(
     external fun render(scene: SceneBridge)
     external fun getBearing(): Angle
     external fun getHighlightedActorId(): ActorId
+    external fun setHighlightedActorId(actorId: ActorId)
+    external fun removeHighlight()
     external fun zoomBy(zoom: Zoom)
     external fun rotateBy(angle: Angle)
     external fun tiltBy(angle: Angle)
-    external fun highlight(x: Int, y: Int)
     external fun createRenderers(actors: Array<ActorBridge>)
     external fun deleteRenderers(ids: Array<ActorId>)
+    external fun playAnimation(actorId: ActorId, animationName: String)
+    external fun attachActor(hookName: String, baseActorId: ActorId, attachedActorId: ActorId)
+    external fun detachActor(hookName: String, baseActorId: ActorId)
 }
