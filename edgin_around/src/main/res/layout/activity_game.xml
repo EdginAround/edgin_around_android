@@ -12,31 +12,25 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         />
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="1"
         android:background="@android:color/transparent"
         >
-        <RelativeLayout
+        <com.edgin.around.widgets.ActionRing
+            android:id="@+id/action_ring_left"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
             />
-        <Button
-            android:text="@string/lorem_ipsum"
+        <com.edgin.around.widgets.ActionRing
+            android:id="@+id/action_ring_right"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
             />
-        <Button
-            android:text="@string/lorem_ipsum"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            />
-    </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>
 
