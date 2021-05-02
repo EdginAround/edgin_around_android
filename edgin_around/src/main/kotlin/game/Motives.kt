@@ -9,13 +9,24 @@ import com.edgin.around.api.actions.CraftStartAction
 import com.edgin.around.api.actions.CreateActorsAction
 import com.edgin.around.api.actions.DamageAction
 import com.edgin.around.api.actions.DeleteActorsAction
-import com.edgin.around.api.actions.LocalizeAction
-import com.edgin.around.api.actions.MovementAction
+import com.edgin.around.api.actions.IdleAction
+import com.edgin.around.api.actions.InventoryUpdateAction
+import com.edgin.around.api.actions.LocalizationAction
+import com.edgin.around.api.actions.MotionAction
 import com.edgin.around.api.actions.PickEndAction
 import com.edgin.around.api.actions.PickStartAction
 import com.edgin.around.api.actions.StatUpdateAction
-import com.edgin.around.api.actions.UpdateInventoryAction
 import com.edgin.around.api.actors.ActorId
+import com.edgin.around.api.enums.Hand
+
+enum class AnimationName(val value: String) {
+    IDLE("idle"),
+    WALK("walk"),
+    PICK("pick"),
+    DAMAGED("damaged"),
+    SWING_LEFT("swing_left"),
+    SWING_RIGHT("swing_right")
+}
 
 open class Motive {
     private val startTime = SystemClock.uptimeMillis()
@@ -93,7 +104,14 @@ data class DeleteActorsMotive(val action: DeleteActorsAction) : Motive() {
     }
 }
 
-data class MovementMotive(val action: MovementAction) : Motive() {
+data class IdleMotive(val action: IdleAction) : Motive() {
+    override fun tick(interval: Long, context: MotiveContext) {
+        context.world.playAnimation(action.actorId, AnimationName.IDLE.value)
+        expire()
+    }
+}
+
+data class MotionMotive(val action: MotionAction) : Motive() {
     override fun getActorId(): ActorId? {
         return action.actorId
     }
@@ -105,18 +123,19 @@ data class MovementMotive(val action: MovementAction) : Motive() {
     override fun doTick(interval: Long, context: MotiveContext) {
         val distance = 0.001f * action.speed * interval
         context.scene.moveActorBy(action.actorId, distance, action.bearing)
-        // TODO: Play walk animation
+        if (getTickCount() == 0) {
+            context.world.playAnimation(action.actorId, AnimationName.WALK.value)
+        }
     }
 }
 
-data class LocalizeMotive(val action: LocalizeAction) : Motive() {
+data class LocalizationMotive(val action: LocalizationAction) : Motive() {
     override fun getActorId(): ActorId {
         return action.actorId
     }
 
     override fun tick(interval: Long, context: MotiveContext) {
         context.scene.setActorPosition(action.actorId, action.position.theta, action.position.phi)
-        // TODO: Play idle animation
         expire()
     }
 }
@@ -130,19 +149,19 @@ data class StatUpdateMotive(val action: StatUpdateAction) : Motive() {
 
 data class PickStartMotive(val action: PickStartAction) : Motive() {
     override fun tick(interval: Long, context: MotiveContext) {
-        // TODO: Play pick animation
+        context.world.playAnimation(action.who, AnimationName.PICK.value)
         expire()
     }
 }
 
 data class PickEndMotive(val action: PickEndAction) : Motive() {
     override fun tick(interval: Long, context: MotiveContext) {
-        // TODO: Play idle animation
+        context.world.playAnimation(action.who, AnimationName.IDLE.value)
         expire()
     }
 }
 
-data class UpdateInventoryMotive(val action: UpdateInventoryAction) : Motive() {
+data class InventoryUpdateMotive(val action: InventoryUpdateAction) : Motive() {
     override fun tick(interval: Long, context: MotiveContext) {
         context.gui.setInventory(action.inventory)
         context.scene.hideActors(action.inventory.getAllIds().toTypedArray())
@@ -153,8 +172,13 @@ data class UpdateInventoryMotive(val action: UpdateInventoryAction) : Motive() {
 
 data class DamageMotive(val action: DamageAction) : Motive() {
     override fun tick(interval: Long, context: MotiveContext) {
-        // TODO: Play animation for dealer
-        // TODO: Play animation for receiver
+        if (action.hand == Hand.LEFT) {
+            context.world.playAnimation(action.dealerId, AnimationName.SWING_LEFT.value)
+        } else {
+            context.world.playAnimation(action.dealerId, AnimationName.SWING_LEFT.value)
+        }
+        context.world.playAnimation(action.receiverId, AnimationName.DAMAGED.value)
+
         // TODO: Play damage sound
         expire()
     }
@@ -164,17 +188,18 @@ class MotiveFactory {
     fun build(action: Action): Motive {
         return when (action) {
             is ConfigurationAction -> ConfigurationMotive(action)
-            is CreateActorsAction -> CreateActorsMotive(action)
-            is DeleteActorsAction -> DeleteActorsMotive(action)
-            is MovementAction -> MovementMotive(action)
-            is LocalizeAction -> LocalizeMotive(action)
-            is StatUpdateAction -> StatUpdateMotive(action)
-            is PickStartAction -> PickStartMotive(action)
-            is PickEndAction -> PickEndMotive(action)
-            is UpdateInventoryAction -> UpdateInventoryMotive(action)
-            is DamageAction -> DamageMotive(action)
-            is CraftStartAction -> CraftStartMotive(action)
             is CraftEndAction -> CraftEndMotive(action)
+            is CraftStartAction -> CraftStartMotive(action)
+            is CreateActorsAction -> CreateActorsMotive(action)
+            is DamageAction -> DamageMotive(action)
+            is DeleteActorsAction -> DeleteActorsMotive(action)
+            is IdleAction -> IdleMotive(action)
+            is LocalizationAction -> LocalizationMotive(action)
+            is MotionAction -> MotionMotive(action)
+            is PickEndAction -> PickEndMotive(action)
+            is PickStartAction -> PickStartMotive(action)
+            is StatUpdateAction -> StatUpdateMotive(action)
+            is InventoryUpdateAction -> InventoryUpdateMotive(action)
             else -> {
                 Log.e(TAG, "Failed to cast animation into motive: $action")
                 DummyMotive()
