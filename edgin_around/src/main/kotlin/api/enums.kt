@@ -2,6 +2,11 @@ package com.edgin.around.api.enums
 
 import com.google.gson.annotations.SerializedName
 
+enum class Attachment(val value: String) {
+    LEFT_ITEM("left_item"),
+    RIGHT_ITEM("right_item"),
+}
+
 enum class DamageVariant {
     @SerializedName("hit")
     HIT,

@@ -3,21 +3,24 @@ package com.edgin.around.game
 import android.os.SystemClock
 import android.util.Log
 import com.edgin.around.api.actions.Action
+import com.edgin.around.api.actions.ActorCreationAction
+import com.edgin.around.api.actions.ActorDeletionAction
 import com.edgin.around.api.actions.ConfigurationAction
+import com.edgin.around.api.actions.CraftBeginAction
 import com.edgin.around.api.actions.CraftEndAction
-import com.edgin.around.api.actions.CraftStartAction
-import com.edgin.around.api.actions.CreateActorsAction
 import com.edgin.around.api.actions.DamageAction
-import com.edgin.around.api.actions.DeleteActorsAction
 import com.edgin.around.api.actions.IdleAction
 import com.edgin.around.api.actions.InventoryUpdateAction
 import com.edgin.around.api.actions.LocalizationAction
 import com.edgin.around.api.actions.MotionAction
+import com.edgin.around.api.actions.PickBeginAction
 import com.edgin.around.api.actions.PickEndAction
-import com.edgin.around.api.actions.PickStartAction
 import com.edgin.around.api.actions.StatUpdateAction
 import com.edgin.around.api.actors.ActorId
+import com.edgin.around.api.enums.Attachment
 import com.edgin.around.api.enums.Hand
+
+internal const val MAX_PICK_DISTANCE: Float = 1.0f
 
 enum class AnimationName(val value: String) {
     IDLE("idle"),
@@ -61,10 +64,39 @@ open class Motive {
     protected open fun doTick(interval: Long, context: MotiveContext) {
         // Do nothing by default
     }
+
+    protected fun refreshHighlight(context: MotiveContext) {
+        val heroId = context.scene.getHeroId()
+        val heroPosition = context.scene.getActorPosition(heroId)
+        if (heroPosition == null) {
+            return
+        }
+
+        val actors = context.scene.findClosestActors(heroPosition, MAX_PICK_DISTANCE)
+
+        // The hero will always be the closest actor
+        if (actors.size > 1) {
+            context.world.setHighlightedActorId(actors[1])
+        } else {
+            context.world.removeHighlight()
+        }
+    }
 }
 
-class DummyMotive() : Motive() {
+data class ActorCreationMotive(val action: ActorCreationAction) : Motive() {
     override fun tick(interval: Long, context: MotiveContext) {
+        context.scene.createActors(action.actors)
+        context.world.createRenderers(action.actors)
+        refreshHighlight(context)
+        expire()
+    }
+}
+
+data class ActorDeletionMotive(val action: ActorDeletionAction) : Motive() {
+    override fun tick(interval: Long, context: MotiveContext) {
+        context.scene.deleteActors(action.actorIds)
+        context.world.deleteRenderers(action.actorIds)
+        refreshHighlight(context)
         expire()
     }
 }
@@ -76,7 +108,7 @@ data class ConfigurationMotive(val action: ConfigurationAction) : Motive() {
     }
 }
 
-data class CraftStartMotive(val action: CraftStartAction) : Motive() {
+data class CraftBeginMotive(val action: CraftBeginAction) : Motive() {
     override fun tick(interval: Long, context: MotiveContext) {
         expire()
     }
@@ -88,18 +120,22 @@ data class CraftEndMotive(val action: CraftEndAction) : Motive() {
     }
 }
 
-data class CreateActorsMotive(val action: CreateActorsAction) : Motive() {
+data class DamageMotive(val action: DamageAction) : Motive() {
     override fun tick(interval: Long, context: MotiveContext) {
-        context.scene.createActors(action.actors)
-        context.world.createRenderers(action.actors)
+        if (action.hand == Hand.LEFT) {
+            context.world.playAnimation(action.dealerId, AnimationName.SWING_LEFT.value)
+        } else {
+            context.world.playAnimation(action.dealerId, AnimationName.SWING_LEFT.value)
+        }
+        context.world.playAnimation(action.receiverId, AnimationName.DAMAGED.value)
+
+        // TODO: Play damage sound
         expire()
     }
 }
 
-data class DeleteActorsMotive(val action: DeleteActorsAction) : Motive() {
+class DummyMotive() : Motive() {
     override fun tick(interval: Long, context: MotiveContext) {
-        context.scene.deleteActors(action.actorIds)
-        context.world.deleteRenderers(action.actorIds)
         expire()
     }
 }
@@ -107,6 +143,41 @@ data class DeleteActorsMotive(val action: DeleteActorsAction) : Motive() {
 data class IdleMotive(val action: IdleAction) : Motive() {
     override fun tick(interval: Long, context: MotiveContext) {
         context.world.playAnimation(action.actorId, AnimationName.IDLE.value)
+        expire()
+    }
+}
+
+data class InventoryUpdateMotive(val action: InventoryUpdateAction) : Motive() {
+    override fun tick(interval: Long, context: MotiveContext) {
+        context.gui.setInventory(action.inventory)
+        context.scene.hideActors(action.inventory.getAllIds().toLongArray())
+
+        val leftItem = action.inventory.getHand(Hand.LEFT)
+        if (leftItem != null) {
+            context.world.attachActor(Attachment.LEFT_ITEM, action.ownerId, leftItem.id)
+        } else {
+            context.world.detachActor(Attachment.LEFT_ITEM, action.ownerId)
+        }
+
+        val rightItem = action.inventory.getHand(Hand.RIGHT)
+        if (rightItem != null) {
+            context.world.attachActor(Attachment.RIGHT_ITEM, action.ownerId, rightItem.id)
+        } else {
+            context.world.detachActor(Attachment.RIGHT_ITEM, action.ownerId)
+        }
+
+        expire()
+    }
+}
+
+data class LocalizationMotive(val action: LocalizationAction) : Motive() {
+    override fun getActorId(): ActorId {
+        return action.actorId
+    }
+
+    override fun tick(interval: Long, context: MotiveContext) {
+        context.scene.setActorPosition(action.actorId, action.position.theta, action.position.phi)
+        refreshHighlight(context)
         expire()
     }
 }
@@ -126,28 +197,11 @@ data class MotionMotive(val action: MotionAction) : Motive() {
         if (getTickCount() == 0) {
             context.world.playAnimation(action.actorId, AnimationName.WALK.value)
         }
+        refreshHighlight(context)
     }
 }
 
-data class LocalizationMotive(val action: LocalizationAction) : Motive() {
-    override fun getActorId(): ActorId {
-        return action.actorId
-    }
-
-    override fun tick(interval: Long, context: MotiveContext) {
-        context.scene.setActorPosition(action.actorId, action.position.theta, action.position.phi)
-        expire()
-    }
-}
-
-data class StatUpdateMotive(val action: StatUpdateAction) : Motive() {
-    override fun tick(interval: Long, context: MotiveContext) {
-        context.gui.setStats(action.stats)
-        expire()
-    }
-}
-
-data class PickStartMotive(val action: PickStartAction) : Motive() {
+data class PickBeginMotive(val action: PickBeginAction) : Motive() {
     override fun tick(interval: Long, context: MotiveContext) {
         context.world.playAnimation(action.who, AnimationName.PICK.value)
         expire()
@@ -161,25 +215,9 @@ data class PickEndMotive(val action: PickEndAction) : Motive() {
     }
 }
 
-data class InventoryUpdateMotive(val action: InventoryUpdateAction) : Motive() {
+data class StatUpdateMotive(val action: StatUpdateAction) : Motive() {
     override fun tick(interval: Long, context: MotiveContext) {
-        context.gui.setInventory(action.inventory)
-        context.scene.hideActors(action.inventory.getAllIds().toTypedArray())
-        // TODO: Update skeleton with hand content
-        expire()
-    }
-}
-
-data class DamageMotive(val action: DamageAction) : Motive() {
-    override fun tick(interval: Long, context: MotiveContext) {
-        if (action.hand == Hand.LEFT) {
-            context.world.playAnimation(action.dealerId, AnimationName.SWING_LEFT.value)
-        } else {
-            context.world.playAnimation(action.dealerId, AnimationName.SWING_LEFT.value)
-        }
-        context.world.playAnimation(action.receiverId, AnimationName.DAMAGED.value)
-
-        // TODO: Play damage sound
+        context.gui.setStats(action.stats)
         expire()
     }
 }
@@ -187,17 +225,17 @@ data class DamageMotive(val action: DamageAction) : Motive() {
 class MotiveFactory {
     fun build(action: Action): Motive {
         return when (action) {
+            is ActorCreationAction -> ActorCreationMotive(action)
+            is ActorDeletionAction -> ActorDeletionMotive(action)
             is ConfigurationAction -> ConfigurationMotive(action)
+            is CraftBeginAction -> CraftBeginMotive(action)
             is CraftEndAction -> CraftEndMotive(action)
-            is CraftStartAction -> CraftStartMotive(action)
-            is CreateActorsAction -> CreateActorsMotive(action)
             is DamageAction -> DamageMotive(action)
-            is DeleteActorsAction -> DeleteActorsMotive(action)
             is IdleAction -> IdleMotive(action)
             is LocalizationAction -> LocalizationMotive(action)
             is MotionAction -> MotionMotive(action)
+            is PickBeginAction -> PickBeginMotive(action)
             is PickEndAction -> PickEndMotive(action)
-            is PickStartAction -> PickStartMotive(action)
             is StatUpdateAction -> StatUpdateMotive(action)
             is InventoryUpdateAction -> InventoryUpdateMotive(action)
             else -> {

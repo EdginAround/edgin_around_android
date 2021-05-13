@@ -18,10 +18,6 @@ abstract class Move {
     }
 }
 
-class ConcludeMove : Move() {
-    override fun getName() = "conclude"
-}
-
 data class CraftMove(
     @SerializedName("assembly")
     val assembly: Assembly
@@ -52,13 +48,13 @@ data class InventoryUpdateMove(
     override fun getName() = "inventory_update"
 }
 
-data class StartMotionMove(
+data class MotionStartMove(
     @SerializedName("bearing")
     val bearing: Float
 ) : Move() {
-    override fun getName() = "start_motion"
+    override fun getName() = "motion_start"
 }
 
-class StopMove : Move() {
-    override fun getName() = "stop"
+class MotionStopMove : Move() {
+    override fun getName() = "motion_stop"
 }
