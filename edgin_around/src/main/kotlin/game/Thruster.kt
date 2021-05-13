@@ -17,14 +17,14 @@ class Thruster(
     scene: Scene,
     world: WorldExpositor,
     gui: Gui
-) {
+) : Receiver.MotiveListener {
     var generalMotives: MutableList<Motive> = mutableListOf()
     var actorMotives: MutableMap<ActorId, Motive> = mutableMapOf()
     var prevTick = SystemClock.uptimeMillis()
     var context = MotiveContext(scene, world, gui)
     var lock = ReentrantLock()
 
-    fun add(motive: Motive) {
+    override fun addMotive(motive: Motive) {
         lock.withLock {
             val actorId = motive.getActorId()
             if (actorId != null) {

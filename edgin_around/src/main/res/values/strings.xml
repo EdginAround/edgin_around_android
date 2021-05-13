@@ -6,6 +6,8 @@
     <string name="intro_no_permissions_text">Not all permissions were granted. Some functionalitites may not work.</string>
     <string name="intro_no_permissions_ok">OK</string>
     <string name="main_play">Play</string>
+    <string name="problem_no_local_server">Could not find any local server.</string>
+    <string name="problem_server_connect">Could not connect to the server.</string>
     <string name="lorem_ipsum">Lorem Ipsum</string>
     <string name="lib_wrong_version">Renderer version is to old. The app may crash.</string>
 </resources>
