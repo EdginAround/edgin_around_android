@@ -1,6 +1,8 @@
 package com.edgin.around.rendering
 
 import com.edgin.around.api.actors.ActorId
+import com.edgin.around.api.actors.ActorIdArray
+import com.edgin.around.api.enums.Attachment
 import com.edgin.around.api.geometry.Angle
 import com.edgin.around.api.geometry.Zoom
 import com.edgin.around.api.actors.Actor as ApiActor
@@ -20,12 +22,40 @@ class WorldExpositor(
         bridge.render(scene.bridge)
     }
 
+    fun getBearing(): Angle {
+        return bridge.getBearing()
+    }
+
+    fun getHighlightedActorId(): ActorId {
+        return bridge.getHighlightedActorId()
+    }
+
+    fun setHighlightedActorId(actorId: ActorId) {
+        bridge.setHighlightedActorId(actorId)
+    }
+
+    fun removeHighlight() {
+        bridge.removeHighlight()
+    }
+
+    fun zoomBy(zoom: Zoom) {
+        bridge.zoomBy(zoom)
+    }
+
+    fun rotateBy(angle: Angle) {
+        bridge.rotateBy(angle)
+    }
+
+    fun tiltBy(angle: Angle) {
+        bridge.tiltBy(angle)
+    }
+
     fun createRenderers(apiActors: Array<ApiActor>) {
         val actors: Array<ActorBridge> = apiActors.map { ActorBridge(it) }.toTypedArray()
         bridge.createRenderers(actors)
     }
 
-    fun deleteRenderers(actorIds: Array<ActorId>) {
+    fun deleteRenderers(actorIds: ActorIdArray) {
         bridge.deleteRenderers(actorIds)
     }
 
@@ -33,12 +63,12 @@ class WorldExpositor(
         bridge.playAnimation(actorId, animationName)
     }
 
-    fun attachActor(hookName: String, baseActorId: ActorId, attachedActorId: ActorId) {
-        bridge.attachActor(hookName, baseActorId, attachedActorId)
+    fun attachActor(attachment: Attachment, baseActorId: ActorId, attachedActorId: ActorId) {
+        bridge.attachActor(attachment.value, baseActorId, attachedActorId)
     }
 
-    fun detachActor(hookName: String, baseActorId: ActorId) {
-        bridge.detachActor(hookName, baseActorId)
+    fun detachActor(attachment: Attachment, baseActorId: ActorId) {
+        bridge.detachActor(attachment.value, baseActorId)
     }
 }
 
@@ -68,7 +98,7 @@ class WorldExpositorBridge(
     external fun rotateBy(angle: Angle)
     external fun tiltBy(angle: Angle)
     external fun createRenderers(actors: Array<ActorBridge>)
-    external fun deleteRenderers(ids: Array<ActorId>)
+    external fun deleteRenderers(ids: ActorIdArray)
     external fun playAnimation(actorId: ActorId, animationName: String)
     external fun attachActor(hookName: String, baseActorId: ActorId, attachedActorId: ActorId)
     external fun detachActor(hookName: String, baseActorId: ActorId)

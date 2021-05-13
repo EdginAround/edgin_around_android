@@ -32,13 +32,12 @@ data class Inventory(
     val rightHand: EntityInfo?,
 
     @SerializedName("entities")
-    val entities: Array<EntityInfo?>
+    val entities: Array<EntityInfo?>?
 ) {
     fun getHand(hand: Hand): EntityInfo? {
-        return when (hand.value) {
-            Hand.LEFT.value -> leftHand
-            Hand.RIGHT.value -> rightHand
-            else -> null
+        return when (hand) {
+            Hand.LEFT -> leftHand
+            Hand.RIGHT -> rightHand
         }
     }
 
@@ -53,9 +52,11 @@ data class Inventory(
             result.add(rightHand.id)
         }
 
-        for (entity in entities) {
-            if (entity != null) {
-                result.add(entity.id)
+        if (entities != null) {
+            for (entity in entities) {
+                if (entity != null) {
+                    result.add(entity.id)
+                }
             }
         }
 
