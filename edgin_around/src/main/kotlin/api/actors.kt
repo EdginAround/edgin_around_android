@@ -4,6 +4,7 @@ import com.edgin.around.api.geometry.Point
 import com.google.gson.annotations.SerializedName
 
 typealias ActorId = Long
+typealias ActorIdArray = LongArray
 
 data class Actor(
     @SerializedName("id")

@@ -4,21 +4,16 @@ import com.edgin.around.api.actors.ActorId
 import com.edgin.around.api.craft.Assembly
 import com.edgin.around.api.enums.Hand
 import com.edgin.around.api.enums.UpdateVariant
-import com.edgin.around.api.moves.ConcludeMove
 import com.edgin.around.api.moves.CraftMove
 import com.edgin.around.api.moves.HandActivationMove
 import com.edgin.around.api.moves.InventoryUpdateMove
+import com.edgin.around.api.moves.MotionStartMove
+import com.edgin.around.api.moves.MotionStopMove
 import com.edgin.around.api.moves.Move
-import com.edgin.around.api.moves.StartMotionMove
-import com.edgin.around.api.moves.StopMove
 import java.io.OutputStream
 
 /** Tool class for sending messages (`moves`) to the server. */
 class Proxy(val stream: OutputStream) {
-    public fun sendConclude() {
-        sendMove(ConcludeMove())
-    }
-
     public fun sendCraft(assembly: Assembly) {
         sendMove(CraftMove(assembly))
     }
@@ -31,12 +26,12 @@ class Proxy(val stream: OutputStream) {
         sendMove(InventoryUpdateMove(hand, inventoryIndex, updateVariant))
     }
 
-    public fun sendMotion(bearing: Float) {
-        sendMove(StartMotionMove(bearing))
+    public fun sendMotionStart(bearing: Float) {
+        sendMove(MotionStartMove(bearing))
     }
 
-    public fun sendStop() {
-        sendMove(StopMove())
+    public fun sendMotionStop() {
+        sendMove(MotionStopMove())
     }
 
     protected fun sendMove(move: Move) {

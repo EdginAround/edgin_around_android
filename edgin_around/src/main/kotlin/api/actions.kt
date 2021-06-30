@@ -2,6 +2,7 @@ package com.edgin.around.api.actions
 
 import com.edgin.around.api.actors.Actor
 import com.edgin.around.api.actors.ActorId
+import com.edgin.around.api.actors.ActorIdArray
 import com.edgin.around.api.enums.DamageVariant
 import com.edgin.around.api.enums.Hand
 import com.edgin.around.api.geometry.Elevation
@@ -26,6 +27,24 @@ open class Action {
     }
 }
 
+data class ActorCreationAction(
+    @SerializedName("actors")
+    val actors: Array<Actor>
+) : Action() {
+    companion object {
+        val NAME = "actor_creation"
+    }
+}
+
+data class ActorDeletionAction(
+    @SerializedName("actor_ids")
+    val actorIds: ActorIdArray
+) : Action() {
+    companion object {
+        val NAME = "actor_deletion"
+    }
+}
+
 data class ConfigurationAction(
     @SerializedName("hero_actor_id")
     val heroActorId: ActorId,
@@ -38,30 +57,21 @@ data class ConfigurationAction(
     }
 }
 
+data class CraftBeginAction(
+    @SerializedName("crafter_id")
+    val crafterId: ActorId
+) : Action() {
+    companion object {
+        val NAME = "craft_begin"
+    }
+}
+
 data class CraftEndAction(
     @SerializedName("crafter_id")
     val crafterId: ActorId
 ) : Action() {
     companion object {
         val NAME = "craft_end"
-    }
-}
-
-data class CraftStartAction(
-    @SerializedName("crafter_id")
-    val crafterId: ActorId
-) : Action() {
-    companion object {
-        val NAME = "craft_start"
-    }
-}
-
-data class CreateActorsAction(
-    @SerializedName("actors")
-    val actors: Array<Actor>
-) : Action() {
-    companion object {
-        val NAME = "create_actors"
     }
 }
 
@@ -80,15 +90,6 @@ data class DamageAction(
 ) : Action() {
     companion object {
         val NAME = "damage"
-    }
-}
-
-data class DeleteActorsAction(
-    @SerializedName("actor_ids")
-    val actorIds: Array<ActorId>
-) : Action() {
-    companion object {
-        val NAME = "delete_actors"
     }
 }
 
@@ -147,16 +148,7 @@ data class MotionAction(
     }
 }
 
-data class PickEndAction(
-    @SerializedName("who")
-    val who: ActorId
-) : Action() {
-    companion object {
-        val NAME = "pick_end"
-    }
-}
-
-data class PickStartAction(
+data class PickBeginAction(
     @SerializedName("who")
     val who: ActorId,
 
@@ -164,7 +156,16 @@ data class PickStartAction(
     val what: ActorId
 ) : Action() {
     companion object {
-        val NAME = "pick_start"
+        val NAME = "pick_begin"
+    }
+}
+
+data class PickEndAction(
+    @SerializedName("who")
+    val who: ActorId
+) : Action() {
+    companion object {
+        val NAME = "pick_end"
     }
 }
 
@@ -182,18 +183,18 @@ data class StatUpdateAction(
 
 val ACTIONS: HashMap<String, Type> = hashMapOf(
     /* ktlint-disable no-multi-spaces dot-spacing */
+    ActorCreationAction  .NAME to ActorCreationAction  ::class.java,
+    ActorDeletionAction  .NAME to ActorDeletionAction  ::class.java,
     ConfigurationAction  .NAME to ConfigurationAction  ::class.java,
+    CraftBeginAction     .NAME to CraftBeginAction     ::class.java,
     CraftEndAction       .NAME to CraftEndAction       ::class.java,
-    CraftStartAction     .NAME to CraftStartAction     ::class.java,
-    CreateActorsAction   .NAME to CreateActorsAction   ::class.java,
     DamageAction         .NAME to DamageAction         ::class.java,
-    DeleteActorsAction   .NAME to DeleteActorsAction   ::class.java,
     IdleAction           .NAME to IdleAction           ::class.java,
     InventoryUpdateAction.NAME to InventoryUpdateAction::class.java,
     LocalizationAction   .NAME to LocalizationAction   ::class.java,
     MotionAction         .NAME to MotionAction         ::class.java,
+    PickBeginAction      .NAME to PickBeginAction      ::class.java,
     PickEndAction        .NAME to PickEndAction        ::class.java,
-    PickStartAction      .NAME to PickStartAction      ::class.java,
     StatUpdateAction     .NAME to StatUpdateAction     ::class.java
     /* ktlint-enable no-multi-spaces dot-spacing */
 )
